@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 extern int fibonacci(int x);
-
 int main(int argc, char **argv)
 {
   int number=0;

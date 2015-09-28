@@ -1,5 +1,5 @@
 CC	= arm-linux-gnueabihf-gcc
-CFLAGS	= -O2 -ggdb -Wall
+CFLAGS	= -O0 -ggdb -Wall
 LDFLAGS = -fno-stack-protector
 
 objects	= example4.o

@@ -9,35 +9,43 @@
 	.type fibonacci, function
 
 fibonacci:
-	@ ADD/MODIFY CODE BELOW
-	@ PROLOG
-	push {r3, r4, r5, lr}
+					// r0 will recieve F("n").
+					// r4 as for-loop index.
+					// r5 will store fibonacci result.
+					// r6 as f(n-2)
+					// r7 as f(n-1)
+	push {r4, r5, r6, r7, lr}
+	mov r6, #0			// Assign f(n-2) = 0	
+	mov r7, #1			// Assign f(n-1) = 1
 
-	@ R4 = R0 - 0 (update flags)
-	@ if(R0 <= 0) goto .L3 (which returns 0)
+	cmp r0, #0			// if(n == 0), jump to .LRT0, return 0.
+	beq .LRT0
+	
+	cmp r0, #1			// if(n == 1), jump to .LTR1, retrun 1.
+	beq .LRT1
 
-	@ Compare R4 wtih 1
-	@ If R4 == 1 goto .L4 (which returns 1)
+	mov r4, #2			// Assign for-loop index start at 2.
 
-	@ R0 = R4 - 1
-	@ Recursive call to fibonacci with R4 - 1 as parameter
+.LLoop:
 
-	@ R5 = R0
-	@ R0 = R4 - 2
-	@ Recursive call to fibonacci with R4 - 2 as parameter
+	add r5, r6, r7			// fib = f(n-2) + f(n-1)
+	mov r6, r7			// f(n-2) = f(n-1)
+	mov r7, r5			// f(n-1) = fib
 
-	@ R0 = R5 + R0 (update flags)
+	add r4, r4, #1			// for-loop index++
+	cmp r4, r0			// Check index range whether reach limmit
+	ble .LLoop
 
-	pop {r3, r4, r5, pc}		@EPILOG
+	mov r0, r5			// Move result to r0 for return.
+	pop {r4, r5, r6, r7, pc}	
 
-	@ END CODE MODIFICATION
-.L3:
-	mov r0, #0			@ R0 = 0
-	pop {r3, r4, r5, pc}		@ EPILOG
+.LRT0:
+	mov r0, #0
+	pop {r4, r5, r6, r7, pc}
 
-.L4:
-	mov r0, #1			@ R0 = 1
-	pop {r3, r4, r5, pc}		@ EPILOG
-
+.LRT1:
+	mov r0, #1
+	pop {r4, r5, r6, r7, pc}	
+	
 	.size fibonacci, .-fibonacci
 	.end
